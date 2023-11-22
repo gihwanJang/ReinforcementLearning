@@ -99,9 +99,9 @@ class CompetitionOlympicsEnvWrapper(gym.Wrapper):
         clipped_action = np.clip(action, -1.0, 1.0)
 
         #scaled_action_0 = -100 + (clipped_action[0] + 1) / 2 * (200 - (-100))
-        scaled_action_0 = -20 + (clipped_action[0] + 1) / 2 * (200 - 1)
+        scaled_action_0 = (-30 + (clipped_action[0] + 1) / 2 * (115 - (-115)))
         #scaled_action_1 = -30 + (clipped_action[1] + 1) / 2 * (30 - (-30))
-        scaled_action_1 = -5 + (clipped_action[1] + 1) / 2 * (5 - (-5))
+        scaled_action_1 = -4 + (clipped_action[1] + 1) / 2 * (4 - (-4))
 
         return np.asarray([scaled_action_0, scaled_action_1])
 
@@ -117,14 +117,18 @@ class CompetitionOlympicsEnvWrapper(gym.Wrapper):
         return obs
 
     def _transform_reward(self, prev_reward, next_observation):
-        center_x, center_y = 20, 20
+        center_x, center_y = 32, 19
         central_region = next_observation[0][center_x - 5:center_x + 5, center_y - 5:center_y + 5]
-    
+        central_region_for_wall = next_observation[0][center_x - 10:center_x + 10, center_y - 10:center_y + 10]
         # 중앙 영역에 7이 포함되어 있는지 확인
         new_reward = 0
-        if 7 in central_region:
-            new_reward += 1000000
-        if 6 in central_region:
-            new_reward += 1
+        if 6 in central_region_for_wall:
+            new_reward -= 6
+        if 10 in central_region:
+            new_reward -= 2
+        if 0 in central_region:
+            new_reward -= 1
+        # if 4 in central_region:
+        #     new_reward += 1
     
-        return new_reward
+        return (prev_reward * 10000) + new_reward

@@ -150,6 +150,8 @@ class PPOAgent(object):
             self.memory.actions.append(action)
             self.memory.log_probs.append(dist.log_prob(action))
             self.memory.values.append(value)
+        else:
+            action = dist.mean
 
         return list(action.detach().cpu().numpy()).pop()
             
@@ -243,10 +245,6 @@ class PPOAgent(object):
             # update policy
             self._update_weights()
             self.num_train += 1
-
-            if self.smart_competition:
-                if self.num_train % self.target_update_interval == 0:
-                    self.actor_target = deepcopy(self.actor)
 
         self._save_train_history()
         self.env.close()
@@ -413,7 +411,6 @@ class PPOAgent(object):
         self.critic.load_state_dict(torch.load(
             f"{self.path2save_train_history}/{self.env_name}/{self.load_model_time}/critic.pth",
             map_location=self.device))
-        
         print("Predtrain models loaded")
 
     def log_wandb(self):
