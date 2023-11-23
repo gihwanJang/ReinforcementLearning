@@ -65,7 +65,7 @@ def get_args(rest_args):
 
     # etc.
     parser.add_argument('--is_evaluate', type=boolean_argument, default=False, help='for evaluation')
-    parser.add_argument('--solved_reward', type=int, default=999274, help='desired reward')
+    parser.add_argument('--solved_reward', type=int, default=999200, help='desired reward')
     parser.add_argument('--plot_interval', type=int, default=10, help='interval for plotting train history')
     parser.add_argument('--print_episode_interval', type=int, default=10, help='interval for printing train history')
 
@@ -75,7 +75,7 @@ def get_args(rest_args):
     parser.add_argument('--frame_stack', type=int, default=4, help='frame stack')
     parser.add_argument('--wandb_use', type=boolean_argument, default=False, help='wandb_use')
     parser.add_argument('--load_model', type=boolean_argument, default=True, help='load previous model')
-    parser.add_argument('--load_model_time', type=str, default="11_21_21_49", help='month_day_hour_minute')
+    parser.add_argument('--load_model_time', type=str, default="11_23_13_57", help='month_day_hour_minute')
 
 
     return parser.parse_args(rest_args)
