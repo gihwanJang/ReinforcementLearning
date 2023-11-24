@@ -64,9 +64,9 @@ class ContinuousActor(nn.Module):
 
         mu = self.tanh(x_mu)
         log_std = self.tanh(x_log)
-
+        
         std = torch.exp(log_std)
         dist = Normal(mu, std)
         action = dist.sample()
-
+        #print(mu,"!!!!")
         return action, dist

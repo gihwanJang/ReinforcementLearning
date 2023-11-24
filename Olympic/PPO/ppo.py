@@ -21,7 +21,7 @@ from ActorCritic.utils import init_weights
 
 import wandb
 from datetime import datetime
-from collections import deque
+from collections import Counter, deque
 from copy import deepcopy
 
 class PPOAgent(object):
@@ -141,6 +141,8 @@ class PPOAgent(object):
         # print(f"{state.shape = }, {state.dim() = }, *************************")
 
         action, dist = self.actor(state)
+        
+        #print("prev : ", action)
 
         if not self.is_evaluate:
             value = self.critic(state)
@@ -150,8 +152,10 @@ class PPOAgent(object):
             self.memory.actions.append(action)
             self.memory.log_probs.append(dist.log_prob(action))
             self.memory.values.append(value)
-        else:
-            action = dist.mean
+        # else:
+        #     action = dist.mean
+            
+        #print("convert : ", action)
 
         return list(action.detach().cpu().numpy()).pop()
             

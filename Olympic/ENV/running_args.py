@@ -49,9 +49,9 @@ def get_args(rest_args):
     parser.add_argument('--value_range', type=float, default=0.5, help='clipping range for critic objective loss')
 
     # other hyperparameters
-    parser.add_argument('--rollout_len', type=int, default=4000, help='num t-steps per one rollout')
-    parser.add_argument('--total_rollouts', type=int, default=1000, help='num rollouts')
-    parser.add_argument('--num_epochs', type=int, default=30, help='num weights updation iteration for one policy update')
+    parser.add_argument('--rollout_len', type=int, default=40000, help='num t-steps per one rollout')
+    parser.add_argument('--total_rollouts', type=int, default=10000, help='num rollouts')
+    parser.add_argument('--num_epochs', type=int, default=1000, help='num weights updation iteration for one policy update')
     parser.add_argument('--batch_size', type=int, default=256, help='data batch size for weights updating')
 
     # agent net
@@ -65,17 +65,17 @@ def get_args(rest_args):
 
     # etc.
     parser.add_argument('--is_evaluate', type=boolean_argument, default=False, help='for evaluation')
-    parser.add_argument('--solved_reward', type=int, default=999200, help='desired reward')
+    parser.add_argument('--solved_reward', type=int, default=999550, help='desired reward')
     parser.add_argument('--plot_interval', type=int, default=10, help='interval for plotting train history')
     parser.add_argument('--print_episode_interval', type=int, default=10, help='interval for printing train history')
 
     # olympic.
-    parser.add_argument('--render_over_train', type=boolean_argument, default=False, help='render over train')
+    parser.add_argument('--render_over_train', type=boolean_argument, default=True, help='render over train')
     parser.add_argument('--controlled_agent_index', type=int, default=1, help='controlled agent index')
     parser.add_argument('--frame_stack', type=int, default=4, help='frame stack')
     parser.add_argument('--wandb_use', type=boolean_argument, default=False, help='wandb_use')
     parser.add_argument('--load_model', type=boolean_argument, default=True, help='load previous model')
-    parser.add_argument('--load_model_time', type=str, default="11_23_13_57", help='month_day_hour_minute')
+    parser.add_argument('--load_model_time', type=str, default="11_23_21_54", help='month_day_hour_minute')
 
 
     return parser.parse_args(rest_args)

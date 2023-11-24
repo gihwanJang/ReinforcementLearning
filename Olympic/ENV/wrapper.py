@@ -102,7 +102,7 @@ class CompetitionOlympicsEnvWrapper(gym.Wrapper):
         scaled_action_0 = (-30 + (clipped_action[0] + 1) / 2 * (115 - (-115)))
         #scaled_action_1 = -30 + (clipped_action[1] + 1) / 2 * (30 - (-30))
         scaled_action_1 = -4 + (clipped_action[1] + 1) / 2 * (4 - (-4))
-
+        
         return np.asarray([scaled_action_0, scaled_action_1])
 
     def frame_stacking(self, deque, obs):
