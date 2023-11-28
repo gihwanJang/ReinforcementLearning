@@ -10,9 +10,11 @@ from pathlib import Path
 project_path = str(Path(__file__).resolve().parent.parent)
 sys.path.append(project_path)
 
-from PPO.ppo import PPOAgent
-from ENV.wrapper import CompetitionOlympicsEnvWrapper
-from ENV import running_args
+from ppo import PPOAgent
+from wrapper import CompetitionOlympicsRunningEnvWrapper
+from wrapper import CompetitionOlympicsWrestlingEnvWrapper
+from config import running_args
+from config import wrestling_args
 from termproject_olympic.env.chooseenv import make
 
 DEVICE = None
@@ -34,7 +36,10 @@ seed_everything(config.seed)
 def make_env(env_name, agent=None, config=None):
     # environment
     env = make(env_type="olympics-integrated", game_name=env_name)
-    env = CompetitionOlympicsEnvWrapper(env, args=config)
+    if env_name == "olympics-running":
+        env = CompetitionOlympicsRunningEnvWrapper(env, args=config)
+    elif env_name == "olympics-wrestling":
+        env = CompetitionOlympicsWrestlingEnvWrapper(env, args=config)
 
     return env
 
@@ -51,15 +56,16 @@ def main(args, evaluation=False):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--env_type", default="olympics-running")
+    #parser.add_argument("--env_type", default="olympics-running")
+    parser.add_argument("--env_type", default="olympics-wrestling")
     # "olympics-wrestling", "olympics-running"
     args, rest_args = parser.parse_known_args()
     env_name = args.env_type
 
     if env_name == "olympics-running":
         args = running_args.get_args(rest_args)
-    # elif env_name == "olympics-wrestling":
-    #     args = running_args.get_args(rest_args)
+    elif env_name == "olympics-wrestling":
+        args = wrestling_args.get_args(rest_args)
     # elif env_name == "olympics-integrated":
     #     args = running_args.get_args(rest_args)
     else:

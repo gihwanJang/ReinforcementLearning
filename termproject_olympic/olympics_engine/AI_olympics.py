@@ -1,3 +1,4 @@
+import time
 from termproject_olympic.olympics_engine.scenario import Running_competition, table_hockey, football, wrestling, curling_competition, billiard_joint, billiard_competition
 import sys, os
 from pathlib import Path
@@ -120,7 +121,7 @@ class AI_Olympics:
         return init_obs
 
     def step(self, action_list):
-
+        #time.sleep(0.1)
         obs, reward, done, _ = self.current_game.step(action_list)
 
         if self.current_game.game_name == 'running-competition':

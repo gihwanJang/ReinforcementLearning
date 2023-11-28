@@ -9,7 +9,7 @@ class random_agent:
         force = random.uniform(self.force_range[0], self.force_range[1])
         angle = random.uniform(self.angle_range[0], self.angle_range[1])
 
-        return [force, angle]
+        return [[force], [angle]]
 
 
 
