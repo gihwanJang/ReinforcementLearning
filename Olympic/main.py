@@ -56,8 +56,8 @@ def main(args, evaluation=False):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    #parser.add_argument("--env_type", default="olympics-running")
-    parser.add_argument("--env_type", default="olympics-wrestling")
+    parser.add_argument("--env_type", default="olympics-running")
+    # parser.add_argument("--env_type", default="olympics-wrestling")
     # "olympics-wrestling", "olympics-running"
     args, rest_args = parser.parse_known_args()
     env_name = args.env_type
