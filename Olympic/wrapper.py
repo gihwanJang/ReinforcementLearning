@@ -39,7 +39,7 @@ class CompetitionOlympicsRunningEnvWrapper(gym.Wrapper):
         self.opponent_agent = ContinuousActor(torch.device("cpu")).apply(init_weights).to(torch.device("cpu"))
         # 상대 에이전트
         self.opponent_agent.load_state_dict(torch.load(
-            "/Users/jang-gihwan/Desktop/DeepLearing/ReinforcementLearning/train_history/olympics-running/11_29_15_39/actor.pth",
+            "/Users/jang-gihwan/Desktop/DeepLearing/ReinforcementLearning/train_history/olympics-running/11_28_9_6/actor.pth",
             map_location=self.device))
 
     def reset(self):
@@ -159,190 +159,190 @@ class CompetitionOlympicsRunningEnvWrapper(gym.Wrapper):
         return (prev_reward * 10000) + new_reward
     
     
-# class CompetitionOlympicsWrestlingEnvWrapper(gym.Wrapper):
-#     def __init__(self, env, agent=None, args=None):
-#         super().__init__(env)
+class CompetitionOlympicsWrestlingEnvWrapper(gym.Wrapper):
+    def __init__(self, env, agent=None, args=None):
+        super().__init__(env)
 
-#         self.args = args
-#         assert self.args
+        self.args = args
+        assert self.args
 
-#         self.controlled_agent_index = args.controlled_agent_index
+        self.controlled_agent_index = args.controlled_agent_index
 
-#         # for frame_stack
-#         self.frame_stack = args.frame_stack
-#         assert self.frame_stack > 0 or isinstance(self.frame_stack, int)
-#         self.frames_controlled = deque([], maxlen=self.frame_stack)
-#         self.frames_opponent = deque([], maxlen=self.frame_stack)
+        # for frame_stack
+        self.frame_stack = args.frame_stack
+        assert self.frame_stack > 0 or isinstance(self.frame_stack, int)
+        self.frames_controlled = deque([], maxlen=self.frame_stack)
+        self.frames_opponent = deque([], maxlen=self.frame_stack)
 
-#         self.sub_game = args.env_name
-#         self.device = args.device
+        self.sub_game = args.env_name
+        self.device = args.device
 
-#         self.episode_steps = 0
-#         self.total_steps = 0
+        self.episode_steps = 0
+        self.total_steps = 0
 
-#     def reset(self):
-#         self.episode_steps = 0
-#         observation = self.env.reset()
+    def reset(self):
+        self.episode_steps = 0
+        observation = self.env.reset()
 
-#         observation_opponent_agent = np.expand_dims(
-#             observation[1 - self.controlled_agent_index]['obs']['agent_obs'], axis=0
-#         )
-#         observation_controlled_agent = np.expand_dims(
-#             observation[self.controlled_agent_index]['obs']['agent_obs'], axis=0
-#         )
+        observation_opponent_agent = np.expand_dims(
+            observation[1 - self.controlled_agent_index]['obs']['agent_obs'], axis=0
+        )
+        observation_controlled_agent = np.expand_dims(
+            observation[self.controlled_agent_index]['obs']['agent_obs'], axis=0
+        )
 
-#         # print(f"{self.sub_game = }")
-#         # print(observation_controlled_agent)
-#         # print(f"before frame stacking!! {observation_controlled_agent.shape = }")
+        # print(f"{self.sub_game = }")
+        # print(observation_controlled_agent)
+        # print(f"before frame stacking!! {observation_controlled_agent.shape = }")
 
-#         ######### frame stack #########
-#         observation_opponent_agent = self.frame_stacking(self.frames_opponent, observation_opponent_agent)
-#         observation_controlled_agent = self.frame_stacking(self.frames_controlled, observation_controlled_agent)
+        ######### frame stack #########
+        observation_opponent_agent = self.frame_stacking(self.frames_opponent, observation_opponent_agent)
+        observation_controlled_agent = self.frame_stacking(self.frames_controlled, observation_controlled_agent)
 
-#         # print(f"after frame stacking!! {observation_controlled_agent.shape = }")
-#         ################################
+        # print(f"after frame stacking!! {observation_controlled_agent.shape = }")
+        ################################
 
-#         return [observation_controlled_agent], None
+        return [observation_controlled_agent], None
 
-#     def step(self, action_controlled):
+    def step(self, action_controlled):
 
-#         if self.args.render_over_train or self.args.is_evaluate:
-#             self.render()
+        if self.args.render_over_train or self.args.is_evaluate:
+            self.render()
 
-#         self.episode_steps += 1
-#         self.total_steps += 1
+        self.episode_steps += 1
+        self.total_steps += 1
 
-#         action_controlled = self.get_scaled_action(action_controlled)
-#         action_opponent = self.get_opponent_action()
-#         # print(action_controlled, f"{action_controlled.shape = }")
+        action_controlled = self.get_scaled_action(action_controlled)
+        action_opponent = self.get_opponent_action()
+        # print(action_controlled, f"{action_controlled.shape = }")
 
-#         action_controlled = np.expand_dims(action_controlled, axis=1)
-#         action_opponent = np.expand_dims(action_opponent, axis=1)
-#         # print(f"after expanding dims!! {action_controlled}, {action_controlled.shape = }")
+        action_controlled = np.expand_dims(action_controlled, axis=1)
+        action_opponent = np.expand_dims(action_opponent, axis=1)
+        # print(f"after expanding dims!! {action_controlled}, {action_controlled.shape = }")
 
-#         action = [action_opponent, action_controlled] if self.args.controlled_agent_index == 1 else [
-#             action_controlled, action_opponent]
-#         # print(f"final action!! {action}")
+        action = [action_opponent, action_controlled] if self.args.controlled_agent_index == 1 else [
+            action_controlled, action_opponent]
+        # print(f"final action!! {action}")
 
-#         next_observation, reward, done, info_before, info_after = self.env.step(action)
+        next_observation, reward, done, info_before, info_after = self.env.step(action)
 
-#         next_observation_opponent_agent = np.expand_dims(
-#             next_observation[1 - self.controlled_agent_index]['obs']['agent_obs'], axis=0)
-#         next_observation_controlled_agent = np.expand_dims(
-#             next_observation[self.controlled_agent_index]['obs']['agent_obs'], axis=0
-#         )
+        next_observation_opponent_agent = np.expand_dims(
+            next_observation[1 - self.controlled_agent_index]['obs']['agent_obs'], axis=0)
+        next_observation_controlled_agent = np.expand_dims(
+            next_observation[self.controlled_agent_index]['obs']['agent_obs'], axis=0
+        )
 
-#         ######### frame stack #########
-#         self.frames_opponent.append(next_observation_opponent_agent)
-#         next_observation_opponent_agent = self._transform_observation(self.frames_opponent)
+        ######### frame stack #########
+        self.frames_opponent.append(next_observation_opponent_agent)
+        next_observation_opponent_agent = self._transform_observation(self.frames_opponent)
 
-#         self.frames_controlled.append(next_observation_controlled_agent)
-#         next_observation_controlled_agent = self._transform_observation(self.frames_controlled)
-#         ################################
+        self.frames_controlled.append(next_observation_controlled_agent)
+        next_observation_controlled_agent = self._transform_observation(self.frames_controlled)
+        ################################
 
-#         reward_controlled = reward[self.controlled_agent_index]
+        reward_controlled = reward[self.controlled_agent_index]
         
-#         reward_controlled = self._transform_reward(reward[self.controlled_agent_index], next_observation_controlled_agent)
+        reward_controlled = self._transform_reward(reward[self.controlled_agent_index], next_observation_controlled_agent)
 
-#         info = {}
+        info = {}
 
-#         return [next_observation_controlled_agent], reward_controlled, done, False, info
+        return [next_observation_controlled_agent], reward_controlled, done, False, info
 
-#     def render(self, mode='human'):
-#         self.env.env_core.render()
+    def render(self, mode='human'):
+        self.env.env_core.render()
 
-#     def close(self):
-#         pass
+    def close(self):
+        pass
 
-#     def get_opponent_action(self):
-#         force = 0.1
-#         angle = 0.1
-#         opponent_scaled_actions = np.asarray([force, angle])
+    def get_opponent_action(self):
+        force = 0.1
+        angle = 0.1
+        opponent_scaled_actions = np.asarray([force, angle])
 
-#         return opponent_scaled_actions
+        return opponent_scaled_actions
 
-#     def get_scaled_action(self, action):
-#         clipped_action = np.clip(action, -1.0, 1.0)
+    def get_scaled_action(self, action):
+        clipped_action = np.clip(action, -1.0, 1.0)
 
-#         scaled_action_0 = clipped_action[0]*5
-#         scaled_action_1 = -30. + (clipped_action[1] + 1) * 30
+        scaled_action_0 = clipped_action[0]*5
+        scaled_action_1 = -30. + (clipped_action[1] + 1) * 30
         
-#         return np.asarray([scaled_action_0, scaled_action_1])
+        return np.asarray([scaled_action_0, scaled_action_1])
 
-#     def frame_stacking(self, deque, obs):
-#         for _ in range(self.frame_stack):
-#             deque.append(obs)
-#         obs = self._transform_observation(deque)
-#         return obs
+    def frame_stacking(self, deque, obs):
+        for _ in range(self.frame_stack):
+            deque.append(obs)
+        obs = self._transform_observation(deque)
+        return obs
 
-#     def _transform_observation(self, frames):
-#         assert len(frames) == self.frame_stack
-#         obs = np.concatenate(list(frames), axis=0)
+    def _transform_observation(self, frames):
+        assert len(frames) == self.frame_stack
+        obs = np.concatenate(list(frames), axis=0)
         
-#         if self.controlled_agent_index == 0 :
-#             obs[np.where(obs == 8)] = 10
-#             obs[np.where(obs == 10)] = 8
+        if self.controlled_agent_index == 0 :
+            obs[np.where(obs == 8)] = 10
+            obs[np.where(obs == 10)] = 8
         
-#         return obs
+        return obs
 
-#     def _transform_reward(self, prev_reward, next_observation):
-#         center_x, center_y = 32, 19
-#         new_reward = 0
+    def _transform_reward(self, prev_reward, next_observation):
+        center_x, center_y = 32, 19
+        new_reward = 0
         
-#         for i in range(4):
-#             central_region_for_wall = next_observation[i][center_x - 5:center_x + 5, center_y - 5:center_y + 5]
+        for i in range(4):
+            central_region_for_wall = next_observation[i][center_x - 5:center_x + 5, center_y - 5:center_y + 5]
             
-#             # self._fill_outter(next_observation, i)
+            # self._fill_outter(next_observation, i)
             
-#             next_observation[i][np.where(next_observation[i] == 1)] = -10000
-#             next_observation[i][np.where(next_observation[i] == 10)] = -1
+            next_observation[i][np.where(next_observation[i] == 1)] = -10000
+            next_observation[i][np.where(next_observation[i] == 10)] = -1
                 
-#             for r in range(10):
-#                 for c in range(10):
-#                     new_reward += central_region_for_wall[r][c]
+            for r in range(10):
+                for c in range(10):
+                    new_reward += central_region_for_wall[r][c]
                     
-#         #print(next_observation)
+        #print(next_observation)
             
-#         return new_reward+10000
+        return new_reward+10000
     
-#     def _fill_outter(self, next_observation, i):
-#         outter = deque()
-#         one_idx = None
-#         four_idx = None
+    def _fill_outter(self, next_observation, i):
+        outter = deque()
+        one_idx = None
+        four_idx = None
         
-#         for r in range(40):
-#             for c in range(40):
-#                 if next_observation[i][r][c] == 1 :
-#                     one_idx = [r,c]
-#                 elif next_observation[i][r][c] == 4 :
-#                     four_idx = [r,c]
+        for r in range(40):
+            for c in range(40):
+                if next_observation[i][r][c] == 1 :
+                    one_idx = [r,c]
+                elif next_observation[i][r][c] == 4 :
+                    four_idx = [r,c]
                     
-#         if one_idx != None and four_idx != None:                    
-#             outter.append([int((one_idx[0] + four_idx[0]) / 2), int((one_idx[1] + four_idx[1]) / 2)])
-#             self._BFS(next_observation, i, outter)
+        if one_idx != None and four_idx != None:                    
+            outter.append([int((one_idx[0] + four_idx[0]) / 2), int((one_idx[1] + four_idx[1]) / 2)])
+            self._BFS(next_observation, i, outter)
                         
-#     def _BFS(self, next_observation, i, outter):
-#         dx = [-1,1,0,0]
-#         dy = [0,0,-1,1]
+    def _BFS(self, next_observation, i, outter):
+        dx = [-1,1,0,0]
+        dy = [0,0,-1,1]
         
-#         while outter:
-#             curr = outter.pop()
+        while outter:
+            curr = outter.pop()
             
-#             if next_observation[i][curr[0]][curr[1]] == 0.:
-#                 next_observation[i][curr[0]][curr[1]] = -100
+            if next_observation[i][curr[0]][curr[1]] == 0.:
+                next_observation[i][curr[0]][curr[1]] = -100
                 
-#                 for i in range(4):
-#                     next_r = curr[0] + dx[i]
-#                     next_c = curr[1] + dy[i]
+                for i in range(4):
+                    next_r = curr[0] + dx[i]
+                    next_c = curr[1] + dy[i]
                     
-#                     if self._is_validate(next_observation[i], next_r, next_c):
-#                         outter.append([next_r, next_c])
+                    if self._is_validate(next_observation[i], next_r, next_c):
+                        outter.append([next_r, next_c])
                     
                     
-#     def _is_validate(self,next_observation, r, c):
-#         return ( (0 <= r < 40 and 0 <= c < 40)
-#                  and
-#                  (next_observation[r][c] == 0.)
-#                 )
+    def _is_validate(self,next_observation, r, c):
+        return ( (0 <= r < 40 and 0 <= c < 40)
+                 and
+                 (next_observation[r][c] == 0.)
+                )
                 
                 

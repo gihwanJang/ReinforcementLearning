@@ -10,7 +10,7 @@ import time
 from termproject_olympic.env.chooseenv import make
 import json
 
-from ReinforcementLearning.Olympic.running_2_agent import running_2_agent
+from Olympic.running_2_agent import running_2_agent
 
 
 def store(record, name):

@@ -12,7 +12,7 @@ sys.path.append(project_path)
 
 from ppo import PPOAgent
 from wrapper import CompetitionOlympicsRunningEnvWrapper
-from wrapper import CompetitionOlympicsWrestlingEnvWrapper
+#from wrapper import CompetitionOlympicsWrestlingEnvWrapper
 from config import running_args
 from config import wrestling_args
 from termproject_olympic.env.chooseenv import make
